@@ -19,5 +19,4 @@ public class User {
     private String name;
     private String surname;
     @Builder.Default private List<String> roles = List.of("USER");
-
 }
