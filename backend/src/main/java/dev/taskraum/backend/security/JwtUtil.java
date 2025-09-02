@@ -22,9 +22,9 @@ public class JwtUtil {
     private final long refreshMs;
 
     public JwtUtil(
-            @Value("$(jwt.secret)") String secret,
-            @Value("$(jwt.accessMinutes)") long accessMinutes,
-            @Value("$(jwt.refreshDays)") long refreshDays
+            @Value("${jwt.secret}") String secret,
+            @Value("${jwt.accessMinutes}") long accessMinutes,
+            @Value("${jwt.refreshDays}") long refreshDays
     ) {
         SecretKey k;
         try {
