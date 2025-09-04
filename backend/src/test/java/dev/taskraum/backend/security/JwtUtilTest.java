@@ -1,5 +1,6 @@
 package dev.taskraum.backend.security;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -8,7 +9,17 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 class JwtUtilTest {
-    JwtUtil jwt = new JwtUtil("H2nBdK+hSN07HIY4ZxvLZWc/xeH+68STSkeFJVJSB7rNpplTmkqY5/gafFtf6xDh", 5, 7);
+
+    JwtUtil jwt;
+
+    @BeforeEach
+    void setUp() {
+        String secret = System.getenv().getOrDefault(
+                "JWT_SECRET_TEST",
+                "PXogpzVEHDFTbJhNm3hZAG2hLj/9HtzdQK8fHaOnpKgDgyhMBwLkkBg/V6G7u0fG"
+        );
+        jwt = new JwtUtil(secret, 5, 7);
+    }
 
     @Test
     void createAccessWithClaims() {

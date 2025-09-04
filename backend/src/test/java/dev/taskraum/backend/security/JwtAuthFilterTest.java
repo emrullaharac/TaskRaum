@@ -2,6 +2,7 @@ package dev.taskraum.backend.security;
 
 import jakarta.servlet.http.Cookie;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -14,8 +15,20 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 class JwtAuthFilterTest {
-    JwtUtil jwt = new JwtUtil("PXogpzVEHDFTbJhNm3hZAG2hLj/9HtzdQK8fHaOnpKgDgyhMBwLkkBg/V6G7u0fG", 5, 7);
-    JwtAuthFilter jwtAuthFilter = new JwtAuthFilter(jwt);
+    JwtUtil jwt;
+    JwtAuthFilter jwtAuthFilter;
+
+    @BeforeEach
+    void setUp() {
+        String secret = System.getenv().getOrDefault(
+                "JWT_SECRET_TEST",
+                "PXogpzVEHDFTbJhNm3hZAG2hLj/9HtzdQK8fHaOnpKgDgyhMBwLkkBg/V6G7u0fG"
+        );
+        jwt = new JwtUtil(secret, 5, 7);
+        jwtAuthFilter = new JwtAuthFilter(jwt);
+    }
+
+
 
     @AfterEach void clear() { SecurityContextHolder.clearContext(); }
 
