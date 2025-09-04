@@ -8,7 +8,7 @@ import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@DataMongoTest(properties = "spring.data.mongodb.auto-index-creation=true")
+@DataMongoTest
 class UserRepositoryTest {
 
     @Autowired UserRepository repo;
