@@ -5,6 +5,7 @@ import dev.taskraum.backend.users.User;
 import dev.taskraum.backend.users.UserRepository;
 import jakarta.servlet.http.Cookie;
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -14,9 +15,6 @@ import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.testcontainers.containers.MongoDBContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -25,17 +23,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
-@Testcontainers
 class AuthIntegrationTest {
-
-    static final String CI_URI = System.getenv("SPRING_DATA_MONGODB_URI");
-
-    @Container static MongoDBContainer mongo = (CI_URI == null) ? new MongoDBContainer("mongo:7") : null;
 
     @DynamicPropertySource
     static void props(DynamicPropertyRegistry reg) {
-        if (CI_URI != null) reg.add("spring.data.mongodb.uri", () -> CI_URI);
-        else                reg.add("spring.data.mongodb.uri", mongo::getReplicaSetUrl);
         reg.add("jwt.secret",
                 () -> "PXogpzVEHDFTbJhNm3hZAG2hLj/9HtzdQK8fHaOnpKgDgyhMBwLkkBg/V6G7u0fG");
         reg.add("jwt.accessMinutes", () -> 5);
@@ -45,6 +36,11 @@ class AuthIntegrationTest {
     @Autowired MockMvc mvc;
     @Autowired JwtUtil jwt;
     @Autowired UserRepository repo;
+
+    @BeforeEach
+    void setUp() {
+        repo.deleteAll();
+    }
 
     @Test
     void registerLoginMeFlow() throws Exception {
