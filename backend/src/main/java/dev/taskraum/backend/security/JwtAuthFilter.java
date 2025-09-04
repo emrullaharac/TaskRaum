@@ -32,7 +32,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             @NonNull FilterChain chain)
         throws ServletException, IOException {
         try {
-            String token = cookie(req, "access");
+            String token = cookie(req);
             if (token != null && !token.isBlank()) {
                 var claims = jwt.parse(token);
                 if ("access".equals(claims.get("typ"))) {
@@ -52,12 +52,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         chain.doFilter(req, res);
     }
 
-    private String cookie(HttpServletRequest req, String name) {
+    private String cookie(HttpServletRequest req) {
         var cookies =  req.getCookies();
         if (cookies == null) return null;
 
         for (Cookie c : cookies) {
-            if (name.equals(c.getName())) {
+            if ("access".equals(c.getName())) {
                 return c.getValue();
             }
         }
