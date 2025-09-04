@@ -28,11 +28,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Testcontainers
 class AuthIntegrationTest {
 
-    @Container static MongoDBContainer mongo = new MongoDBContainer("mongo:7");
+    static final String CI_URI = System.getenv("SPRING_DATA_MONGODB_URI");
+
+    @Container static MongoDBContainer mongo = (CI_URI == null) ? new MongoDBContainer("mongo:7") : null;
 
     @DynamicPropertySource
     static void props(DynamicPropertyRegistry reg) {
-        reg.add("spring.data.mongodb.uri", mongo::getReplicaSetUrl);
+        if (CI_URI != null) reg.add("spring.data.mongodb.uri", () -> CI_URI);
+        else                reg.add("spring.data.mongodb.uri", mongo::getReplicaSetUrl);
         reg.add("jwt.secret",
                 () -> "PXogpzVEHDFTbJhNm3hZAG2hLj/9HtzdQK8fHaOnpKgDgyhMBwLkkBg/V6G7u0fG");
         reg.add("jwt.accessMinutes", () -> 5);

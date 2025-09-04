@@ -15,12 +15,16 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @DataMongoTest(properties = "spring.data.mongodb.auto-index-creation=true")
 @Testcontainers(disabledWithoutDocker = true)
 class UserRepositoryTest {
+
+    static final String CI_URI = System.getenv("SPRING_DATA_MONGODB_URI");
+
     @Container
-    static MongoDBContainer mongo = new MongoDBContainer("mongo:7");
+    static MongoDBContainer mongo = (CI_URI == null) ? new MongoDBContainer("mongo:7") : null;
 
     @DynamicPropertySource
     static void props(DynamicPropertyRegistry reg) {
-        reg.add("spring.data.mongodb.uri", mongo::getReplicaSetUrl);
+        if (CI_URI != null) reg.add("spring.data.mongodb.uri", () -> CI_URI);
+        else                reg.add("spring.data.mongodb.uri", mongo::getReplicaSetUrl);
     }
 
     @Autowired UserRepository repo;

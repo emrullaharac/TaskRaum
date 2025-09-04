@@ -21,4 +21,8 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Build with Maven
+      env:
+        SPRING_DATA_MONGODB_URI: mongodb://localhost:27017/test
+        JWT_SECRET_TEST: ${{ secrets.JWT_SECRET_TEST }}
+        TESTCONTAINERS_DISABLED: true
       run: mvn -B package --file backend/pom.xml
