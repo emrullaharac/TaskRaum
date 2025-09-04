@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 class JwtAuthFilterTest {
-    JwtUtil jwt = new JwtUtil("H2nBdK+hSN07HIY4ZxvLZWc/xeH+68STSkeFJVJSB7rNpplTmkqY5/gafFtf6xDh", 5, 7);
+    JwtUtil jwt = new JwtUtil("PXogpzVEHDFTbJhNm3hZAG2hLj/9HtzdQK8fHaOnpKgDgyhMBwLkkBg/V6G7u0fG", 5, 7);
     JwtAuthFilter jwtAuthFilter = new JwtAuthFilter(jwt);
 
     @AfterEach void clear() { SecurityContextHolder.clearContext(); }
