@@ -17,6 +17,9 @@ import java.util.Map;
 
 @Component
 public class JwtUtil {
+    private final String ACCESS = "access";
+    private final String REFRESH = "refresh";
+
     private final SecretKey key;
     private final long accessMs;
     private final long refreshMs;
@@ -42,7 +45,7 @@ public class JwtUtil {
         var now = System.currentTimeMillis();
         return Jwts.builder()
                 .subject(userId)
-                .claims(Map.of("email", email, "typ", "access"))
+                .claims(Map.of("email", email, "typ", ACCESS))
                 .issuedAt(new Date(now))
                 .expiration(new Date(now + accessMs))
                 .signWith(key, Jwts.SIG.HS256)
@@ -53,7 +56,7 @@ public class JwtUtil {
         var now = System.currentTimeMillis();
         return Jwts.builder()
                 .subject(userId)
-                .claims(Map.of("typ", "refresh"))
+                .claims(Map.of("typ", REFRESH))
                 .issuedAt(new Date(now))
                 .expiration(new Date(now + refreshMs))
                 .signWith(key, Jwts.SIG.HS256)
@@ -68,7 +71,7 @@ public class JwtUtil {
     }
 
     public ResponseCookie accessCookie(String token) {
-        return ResponseCookie.from("access", token)
+        return ResponseCookie.from(ACCESS, token)
                 .httpOnly(true)
                 .secure(false)
                 .sameSite("Lax")
@@ -78,7 +81,7 @@ public class JwtUtil {
     }
 
     public ResponseCookie refreshCookie(String token) {
-        return ResponseCookie.from("refresh", token)
+        return ResponseCookie.from(REFRESH, token)
                 .httpOnly(true)
                 .secure(false)
                 .sameSite("Lax")
@@ -88,7 +91,7 @@ public class JwtUtil {
     }
 
     public ResponseCookie clearAccessCookie() {
-        return ResponseCookie.from("access", "")
+        return ResponseCookie.from(ACCESS, "")
                 .httpOnly(true)
                 .secure(false)
                 .sameSite("Lax")
@@ -98,7 +101,7 @@ public class JwtUtil {
     }
 
     public ResponseCookie clearRefreshCookie() {
-        return ResponseCookie.from("refresh", "")
+        return ResponseCookie.from(REFRESH, "")
                 .httpOnly(true)
                 .secure(false)
                 .sameSite("Lax")

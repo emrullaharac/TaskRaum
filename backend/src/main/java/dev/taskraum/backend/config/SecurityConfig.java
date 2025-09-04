@@ -19,6 +19,9 @@ public class SecurityConfig {
 
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http, JwtAuthFilter jwtAuthFilter) throws Exception {
+        // We use stateless JWT (Authorization header), no server-side sessions or cookies.
+        // CSRF protection is disabled intentionally for this API.
+        // If you ever send auth cookies, re-enable CSRF for state-changing endpoints.
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())

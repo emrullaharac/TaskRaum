@@ -46,7 +46,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 }
             }
         } catch (JwtException ignored) {
-            // ignored/expired access token -> stay unauthenticated;
             SecurityContextHolder.clearContext();
         }
         chain.doFilter(req, res);
