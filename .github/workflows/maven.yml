@@ -1,13 +1,16 @@
 name: Java CI with Maven
-
 on:
   push:
 
-
 jobs:
   build:
-
     runs-on: ubuntu-latest
+
+    services:
+      mongo:
+        image: mongo:latest
+        ports:
+          - 27017:27017
 
     steps:
     - uses: actions/checkout@v4
@@ -17,5 +20,8 @@ jobs:
         java-version: '21'
         distribution: 'temurin'
         cache: maven
+
     - name: Build with Maven
+      env:
+        JWT_SECRET_TEST: ${{ secrets.JWT_SECRET_TEST }}
       run: mvn -B package --file backend/pom.xml

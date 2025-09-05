@@ -1,0 +1,73 @@
+package dev.taskraum.backend.auth;
+
+import dev.taskraum.backend.security.JwtUtil;
+import dev.taskraum.backend.users.User;
+import dev.taskraum.backend.users.UserRepository;
+import jakarta.servlet.http.Cookie;
+import org.hamcrest.Matchers;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpHeaders;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@AutoConfigureMockMvc
+class AuthIntegrationTest {
+
+    @Autowired MockMvc mvc;
+    @Autowired JwtUtil jwt;
+    @Autowired UserRepository repo;
+
+    @BeforeEach
+    void setUp() {
+        repo.deleteAll();
+    }
+
+    @Test
+    void registerLoginMeFlow() throws Exception {
+        mvc.perform(post("/auth/register")
+                .contentType(APPLICATION_JSON)
+                .content("""
+                    {"email":"a@b.com",
+                    "name":"N",
+                    "surname":"S",
+                    "password":"pass12345"}"""))
+                .andExpect(status().isOk());
+
+        MvcResult login = mvc.perform(post("/auth/login")
+                .contentType(APPLICATION_JSON)
+                .content("""
+                {
+                 "email": "a@b.com",
+                 "password": "pass12345"
+                }
+                """))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        var accessCookie = login.getResponse().getCookie("access");
+
+        mvc.perform(get("/auth/me").cookie(accessCookie))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.email").value("a@b.com"));
+    }
+
+    @Test
+    void refreshFlow() throws Exception {
+        var u = repo.save(User.builder().email("x@y.com").passwordHash("HASH").name("N").surname("S").build());
+        var refresh = jwt.createRefreshToken(u.getId());
+
+        mvc.perform(post("/auth/refresh").cookie(new Cookie("refresh", refresh)))
+                .andExpect(status().isOk())
+                .andExpect(header().string(HttpHeaders.SET_COOKIE, Matchers.containsString("access=")));
+    }
+}
