@@ -3,6 +3,7 @@ import { useNavigate, Link as RouterLink } from "react-router-dom";
 import {
     Container, Box, Typography, TextField, Button, Alert, Stack, Link
 } from "@mui/material";
+import { register } from "../../features/auth/api";
 
 export default function RegisterPage() {
     const navigate = useNavigate();
@@ -18,13 +19,8 @@ export default function RegisterPage() {
         setError(null);
         setSubmitting(true);
         try {
-            const res = await fetch("http://localhost:8080/auth/register", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ name, surname, email, password }),
-            });
-            if (!res.ok) throw new Error("Registration failed");
-            navigate("/login");
+            await register(name, surname, email, password);
+            navigate("/login", { replace: true });
         } catch (err) {
             const msg = err instanceof Error ? err.message : "Registration failed";
             setError(msg);
