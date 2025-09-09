@@ -7,7 +7,6 @@ export default function AppFooter() {
         <Box
             component="footer"
             sx={(theme) => ({
-                // allow height to grow when wrapping
                 minHeight: 56,
                 display: "flex",
                 alignItems: "center",
@@ -35,19 +34,19 @@ export default function AppFooter() {
                 <Typography
                     variant="body2"
                     sx={{ minWidth: 0, flexShrink: 1, textAlign: { xs: "center", sm: "left" } }}
-                    noWrap={false}   // allow wrapping if it needs to
+                    noWrap={false}
                 >
                     © {new Date().getFullYear()} TaskRaum — Developed by Emrullah Arac
                 </Typography>
 
                 <Stack
                     direction="row"
-                    spacing={2}
+                    spacing={1.5}
                     sx={{
-                        flexWrap: "wrap",     // enables wrapping
+                        flexWrap: "wrap",
                         rowGap: 0.5,
                         justifyContent: { xs: "center", sm: "flex-end" },
-                        maxWidth: "100%",
+                        alignItems: "center",
                     }}
                 >
                     <Link
@@ -60,6 +59,9 @@ export default function AppFooter() {
                     >
                         Home
                     </Link>
+
+                    <Typography variant="body2" color="text.secondary">·</Typography>
+
                     <Link
                         component={RouterLink}
                         to="/about"
@@ -70,6 +72,9 @@ export default function AppFooter() {
                     >
                         About
                     </Link>
+
+                    <Typography variant="body2" color="text.secondary">·</Typography>
+
                     <Link
                         href="https://github.com/emrullaharac/TaskRaum"
                         underline="hover"
