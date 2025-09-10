@@ -17,7 +17,7 @@ export default function DashboardPage() {
 
     async function handleLogout() {
         await logout();
-        navigate("/login", { replace: true });
+        navigate("/", { replace: true });
     }
 
     if (loading) {
