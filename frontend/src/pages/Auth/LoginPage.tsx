@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link as RouterLink } from "react-router-dom";
-import {
-    Container, Box, Typography, TextField, Button, Alert, Stack, Link
-} from "@mui/material";
+import { Container, Box, Typography, TextField, Button, Alert, Stack, Link } from "@mui/material";
+import { login } from "../../features/auth/api";
 
 export default function LoginPage() {
     const navigate = useNavigate();
@@ -16,23 +15,7 @@ export default function LoginPage() {
         setError(null);
         setSubmitting(true);
         try {
-            const res = await fetch("http://localhost:8080/auth/login", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                credentials: "include", // send and receive HttpOnly cookies
-                body: JSON.stringify({ email, password }),
-            });
-
-            if (!res.ok) {
-                let message = "Login failed";
-                try {
-                    const data = await res.json();
-                    message = data?.message || data?.error || message;
-                } catch { /* ignore parse error */ }
-                throw new Error(message);
-            }
-
-            // Login successful -> redirect -> dashboard
+            await login(email, password);
             navigate("/app", { replace: true });
         } catch (err) {
             const msg = err instanceof Error ? err.message : "Login failed";
