@@ -1,70 +1,77 @@
-import axios, { AxiosError, type AxiosRequestConfig } from "axios";
+import axios, { AxiosError } from "axios";
 
 export const API_BASE = import.meta.env.DEV ? "/api" : "";
 
-/** Single axios instance for the whole app */
 export const api = axios.create({
     baseURL: API_BASE,
-    withCredentials: true, // send/receive HttpOnly cookies
+    withCredentials: true,
     headers: { "Content-Type": "application/json" },
 });
 
-/** Mark config as retried once to avoid infinite loops */
-type RetriableConfig = AxiosRequestConfig & { _retry?: boolean };
+// --- NEW: logout guard ---
+let isLoggingOut = false;
+export function setLoggingOut(v: boolean) {
+    isLoggingOut = v;
+}
 
-/** Avoid parallel refresh storms */
 let isRefreshing = false;
 let pendingQueue: Array<() => void> = [];
+const onRefreshed = () => { pendingQueue.forEach(r => r()); pendingQueue = []; };
+const waitForRefresh = () => new Promise<void>((r) => pendingQueue.push(r));
 
-function onRefreshed() {
-    pendingQueue.forEach((resolve) => resolve());
-    pendingQueue = [];
-}
+let forced = false;
+const redirectToLogin = () => {
+    if (!forced && window.location.pathname !== "/login") {
+        forced = true;
+        window.location.replace("/login");
+    }
+};
 
-function redirectToLogin() {
-    // keep it simple; works anywhere (no hooks)
-    window.location.replace("/login");
-}
-
-/** RESPONSE INTERCEPTOR */
 api.interceptors.response.use(
     (res) => res,
     async (error: AxiosError) => {
-        const { config, response } = error;
-        const original = config as RetriableConfig;
+        const { response } = error;
+        const original = error.config!;
 
-        // If no response or not 401 → just reject
-        if (!response || response.status !== 401) {
-            return Promise.reject(error);
-        }
-
-        // Do not try to refresh on auth endpoints themselves
-        const url = original?.url ?? "";
-        if (url?.startsWith("/auth/login") || url?.startsWith("/auth/register") || url?.startsWith("/auth/refresh")) {
+        // If we're logging out, never refresh; go to login.
+        if (isLoggingOut) {
             redirectToLogin();
             return Promise.reject(error);
         }
 
-        // Already retried once → give up
-        if (original?._retry) {
+        if (!response || response.status !== 401) return Promise.reject(error);
+
+        // allow /auth/me probe to fail quietly
+        if (original.skipAuthRedirect) return Promise.reject(error);
+
+        const url = original.url ?? "";
+        if (url.startsWith("/auth/login") || url.startsWith("/auth/register") || url.startsWith("/auth/refresh")) {
             redirectToLogin();
             return Promise.reject(error);
         }
 
-        // Queue the retry until refresh completes
+        if (original._retry) {
+            redirectToLogin();
+            return Promise.reject(error);
+        }
+
         if (isRefreshing) {
-            await new Promise<void>((resolve) => pendingQueue.push(resolve));
+            await waitForRefresh();
             original._retry = true;
-            return api(original); // retry after someone else refreshed
+            return api(original);
         }
 
-        // Perform refresh
         try {
             isRefreshing = true;
-            await api.post("/auth/refresh"); // sets new cookies
+            // raw axios to avoid this interceptor
+            await axios.post(`${API_BASE}/auth/refresh`, undefined, {
+                withCredentials: true,
+                headers: { "Content-Type": "application/json" },
+                skipAuthRedirect: true,
+            });
             onRefreshed();
             original._retry = true;
-            return api(original); // retry original call
+            return api(original);
         } catch (e) {
             redirectToLogin();
             return Promise.reject(e);

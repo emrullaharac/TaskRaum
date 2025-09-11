@@ -1,19 +1,12 @@
-import { useEffect, useState } from "react";
-import { Navigate, Outlet } from "react-router-dom";
-import { CircularProgress, Box } from "@mui/material";
-import {me} from "./api";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
+import { Box, CircularProgress } from "@mui/material";
+import { useAuthStore } from "../../store/authStore";
 
 export function RequireAuth() {
-    const [status, setStatus] = useState<"loading" | "ok" | "nope">("loading");
+    const { user, loading } = useAuthStore();
+    const location = useLocation();
 
-    useEffect(() => {
-        let alive = true;
-        me().then((u)=> { if (alive) setStatus(u?"ok":"nope"); })
-            .catch(()=> { if (alive) setStatus("nope") });
-        return () => { alive = false; }
-        }, []);
-
-    if (status === "loading") {
+    if (loading) {
         return (
             <Box minHeight="60vh" display="flex" alignItems="center" justifyContent="center">
                 <CircularProgress />
@@ -21,5 +14,5 @@ export function RequireAuth() {
         );
     }
 
-    return status === "ok" ? <Outlet /> : <Navigate to="/login" replace />;
+    return user ? <Outlet /> : <Navigate to="/login" replace state={{ from: location }} />;
 }

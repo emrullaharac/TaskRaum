@@ -5,18 +5,8 @@ import AppFooter from "../../components/Layout/AppFooter";
 import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
 import SecurityIcon from "@mui/icons-material/Security";
 import DesignServicesIcon from "@mui/icons-material/DesignServices";
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { me } from "../../features/auth/api";
 
 export default function HomePage() {
-    const navigate = useNavigate();
-
-    useEffect(() => {
-        me().then((user) => {
-            if (user) navigate("/app", { replace: true });
-        });
-    }, [navigate]);
 
     return (
         <Box sx={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>

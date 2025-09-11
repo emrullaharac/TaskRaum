@@ -1,11 +1,13 @@
 import { create } from "zustand";
-import { me, type UserDto } from "../features/auth/api";
+import { me, logout as apiLogout, type UserDto } from "../features/auth/api";
+import { setLoggingOut } from "../api/client";
 
 type AuthState = {
     user: UserDto | null;
     loading: boolean;
     fetchUser: () => Promise<void>;
     clear: () => void;
+    logout: () => Promise<void>;
 };
 
 export const useAuthStore = create<AuthState>((set) => ({
@@ -20,4 +22,12 @@ export const useAuthStore = create<AuthState>((set) => ({
         }
     },
     clear: () => set({ user: null }),
+    logout: async () => {
+        try {
+            setLoggingOut(true);
+            await apiLogout();
+        } finally {
+            set({ user: null });
+        }
+    },
 }));
