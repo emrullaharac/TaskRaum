@@ -2,9 +2,12 @@ import { useState } from "react";
 import { useNavigate, Link as RouterLink } from "react-router-dom";
 import { Container, Box, Typography, TextField, Button, Alert, Stack, Link } from "@mui/material";
 import { login } from "../../features/auth/api";
+import {useAuthStore} from "../../store/authStore.ts";
 
 export default function LoginPage() {
     const navigate = useNavigate();
+    const fetchUser = useAuthStore((s) => s.fetchUser);
+
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [submitting, setSubmitting] = useState(false);
@@ -16,6 +19,7 @@ export default function LoginPage() {
         setSubmitting(true);
         try {
             await login(email, password);
+            await fetchUser();             // <- hydrate store
             navigate("/app", { replace: true });
         } catch (err) {
             const msg = err instanceof Error ? err.message : "Login failed";

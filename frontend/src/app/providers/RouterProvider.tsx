@@ -1,13 +1,19 @@
-import {BrowserRouter, Routes, Route, Navigate} from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import type { ReactNode } from "react";
 import HomePage from "../../pages/Home/HomePage";
 import AboutPage from "../../pages/About/AboutPage";
 import LoginPage from "../../pages/Auth/LoginPage";
 import RegisterPage from "../../pages/Auth/RegisterPage";
 import DashboardPage from "../../pages/Dashboard/DashboardPage";
-import { RequireAuth } from "../../features/auth/guards";
 import NotFoundPage from "../../pages/System/NotFoundPage";
-import {useAuthStore} from "../../store/authStore.ts";
-import {Box, CircularProgress} from "@mui/material";
+import { RequireAuth } from "../../features/auth/guards";
+import { useAuthStore } from "../../store/authStore";
+import { Box, CircularProgress } from "@mui/material";
+
+function AuthGate({ children }: { children: ReactNode }) {
+    const { user } = useAuthStore();
+    return user ? <Navigate to="/app" replace /> : <>{children}</>;
+}
 
 export function RouterProvider() {
     const { user, loading } = useAuthStore();
@@ -31,10 +37,9 @@ export function RouterProvider() {
             <Routes>
                 {/* Public */}
                 <Route path="/" element={user ? <Navigate to="/app" replace /> : <HomePage />} />
-                <Route path="/" element={<HomePage />} />
                 <Route path="/about" element={<AboutPage />} />
-                <Route path="/login" element={<LoginPage />} />
-                <Route path="/register" element={<RegisterPage />} />
+                <Route path="/login" element={<AuthGate><LoginPage /></AuthGate>} />
+                <Route path="/register" element={<AuthGate><RegisterPage /></AuthGate>} />
 
                 {/* Private */}
                 <Route element={<RequireAuth />}>

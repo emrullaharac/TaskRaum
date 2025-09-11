@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { Container, Box, Typography, Button, Stack, CircularProgress } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { me, logout, type UserDto } from "../../features/auth/api";
+import { me, type UserDto } from "../../features/auth/api";
 import MainAppBar from "../../components/AppBar/MainAppBar.tsx";
+import {useAuthStore} from "../../store/authStore.ts";
 
 
 
@@ -10,15 +11,16 @@ export default function DashboardPage() {
     const navigate = useNavigate();
     const [user, setUser] = useState<UserDto | null>(null);
     const [loading, setLoading] = useState(true);
+    const doLogout = useAuthStore(s => s.logout);
 
     useEffect(() => {
         me().then(setUser).finally(() => setLoading(false));
     }, []);
 
-    async function handleLogout() {
-        await logout();
-        navigate("/", { replace: true });
-    }
+    const handleLogout = async () => {
+        await doLogout();
+        navigate("/login", { replace: true });
+    };
 
     if (loading) {
         return (
