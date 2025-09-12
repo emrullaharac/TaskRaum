@@ -31,8 +31,10 @@ public class ProjectController {
             @RequestParam(defaultValue = "updatedAt, DESC") String sort) {
 
         String[] s = sort.split(",");
-        Sort.Direction dir = (s.length > 1 && "ASC".equalsIgnoreCase(s[1])) ? Sort.Direction.ASC : Sort.Direction.DESC;
-        Pageable pageable = PageRequest.of(page, size, Sort.by(dir, s[0]));
+        String field = s[0].trim();
+        String dirToken = (s.length > 1 ? s[1].trim() : "");
+        Sort.Direction dir = "ASC".equalsIgnoreCase(dirToken) ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(dir, field));
         return service.list(me.id(), status, pageable);
     }
 
