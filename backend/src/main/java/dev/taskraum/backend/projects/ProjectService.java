@@ -31,14 +31,14 @@ public class ProjectService {
         return toResponse(projectRepo.save(p));
     }
 
-    public ProjectResponse get(String id, String ownerId) {
+    public ProjectResponse get(String ownerId, String id) {
         Project p = projectRepo.findByIdAndOwnerId(id, ownerId)
                 .orElseThrow(() -> new IllegalArgumentException("PROJECT_NOT_FOUND"));
         return toResponse(p);
     }
 
     @Transactional
-    public ProjectResponse update(String id, String ownerId, UpdateProjectDto dto) {
+    public ProjectResponse update(String ownerId, String id, UpdateProjectDto dto) {
         Project p = projectRepo.findByIdAndOwnerId(id, ownerId)
                 .orElseThrow(() -> new IllegalArgumentException("PROJECT_NOT_FOUND"));
 
@@ -60,7 +60,7 @@ public class ProjectService {
     }
 
     @Transactional
-    public void hardDelete(String id, String ownerId) {
+    public void hardDelete(String ownerId, String id) {
         Project p = projectRepo.findByIdAndOwnerId(id, ownerId)
                 .orElseThrow(() -> new IllegalArgumentException("PROJECT_NOT_FOUND"));
 
