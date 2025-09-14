@@ -1,75 +1,82 @@
-import { useState } from "react";
-import { useNavigate, Link as RouterLink } from "react-router-dom";
-import { Container, Box, Typography, TextField, Button, Alert, Stack, Link } from "@mui/material";
+import { Stack, TextField, Link } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { loginSchema, type LoginInput } from "../../features/auth/validation";
 import { login } from "../../features/auth/api";
-import {useAuthStore} from "../../store/authStore.ts";
+import { useState } from "react";
+import { useAuthStore } from "../../store/authStore";
+import AuthLayout from "../../features/auth/components/AuthLayout.tsx";
+import FormErrorAlert from "../../features/auth/components/FormErrorAlert.tsx";
+import PasswordField from "../../features/auth/components/PasswordField.tsx";
+import axios from "axios";
+
+function getApiMessage(err: unknown): string {
+    if (axios.isAxiosError(err) && err.response?.data) {
+        const d = err.response.data;
+        return d.message || d.error || d.detail || "Login failed";
+    }
+    return err instanceof Error ? err.message : "Login failed";
+}
 
 export default function LoginPage() {
     const navigate = useNavigate();
-    const fetchUser = useAuthStore((s) => s.fetchUser);
+    const fetchUser = useAuthStore(s => s.fetchUser);
+    const [formError, setFormError] = useState<string | null>(null);
 
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [submitting, setSubmitting] = useState(false);
-    const [error, setError] = useState<string | null>(null);
+    const { control, handleSubmit, formState: { isSubmitting } } = useForm<LoginInput>({
+        resolver: zodResolver(loginSchema),
+        defaultValues: { email: "", password: "" },
+    });
 
-    async function handleSubmit(e: React.FormEvent) {
-        e.preventDefault();
-        setError(null);
-        setSubmitting(true);
+    const onSubmit = async (data: LoginInput) => {
+        setFormError(null);
         try {
-            await login(email, password);
-            await fetchUser();             // <- hydrate store
+            await login(data.email, data.password);
+            await fetchUser();
             navigate("/app", { replace: true });
-        } catch (err) {
-            const msg = err instanceof Error ? err.message : "Login failed";
-            setError(msg);
-        } finally {
-            setSubmitting(false);
+        } catch (e) {
+            setFormError(getApiMessage(e));
         }
-    }
+    };
 
     return (
-        <Container maxWidth="xs">
-            <Box py={8}>
-                <Typography variant="h4" fontWeight={700} mb={2}>Login</Typography>
-                <Typography color="text.secondary" mb={3}>
-                    Enter your credentials to continue.
-                </Typography>
+        <AuthLayout title="Login" subtitle="Enter your credentials to continue.">
+            <FormErrorAlert message={formError} />
+            <form onSubmit={handleSubmit(onSubmit)} noValidate>
+                <Stack spacing={2}>
+                    <Controller
+                        control={control}
+                        name="email"
+                        render={({ field, fieldState }) => (
+                            <TextField
+                                {...field}
+                                label="Email"
+                                type="email"
+                                autoComplete="email"
+                                autoFocus
+                                error={!!fieldState.error}
+                                helperText={fieldState.error?.message}
+                                fullWidth
+                            />
+                        )}
+                    />
+                    <PasswordField<LoginInput>
+                        control={control}
+                        name="password"
+                        autoComplete="current-password"
+                    />
+                    <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
+                        Sign in
+                    </LoadingButton>
+                </Stack>
+            </form>
 
-                {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
-
-                <Box component="form" onSubmit={handleSubmit}>
-                    <Stack spacing={2}>
-                        <TextField
-                            label="Email"
-                            type="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            autoComplete="email"
-                            required
-                            fullWidth
-                        />
-                        <TextField
-                            label="Password"
-                            type="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            autoComplete="current-password"
-                            required
-                            fullWidth
-                        />
-                        <Button type="submit" variant="contained" disabled={submitting}>
-                            {submitting ? "Signing in..." : "Sign in"}
-                        </Button>
-                    </Stack>
-                </Box>
-
-                <Typography mt={2}>
-                    No account?{" "}
-                    <Link component={RouterLink} to="/register">Create one</Link>
-                </Typography>
-            </Box>
-        </Container>
+            <Stack direction="row" spacing={1} mt={2} justifyContent="center">
+                <span>No account?</span>
+                <Link component={RouterLink} to="/register">Create one</Link>
+            </Stack>
+        </AuthLayout>
     );
 }
