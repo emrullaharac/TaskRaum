@@ -91,7 +91,8 @@ class TaskControllerTest {
 
         mvc.perform(post("/api/projects/{pid}/tasks", "p1")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(body))
+                .content(body)
+                .with(authentication(auth)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value("t1"));
     }
