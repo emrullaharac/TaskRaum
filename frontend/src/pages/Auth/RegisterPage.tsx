@@ -1,61 +1,109 @@
+import {Stack, TextField, Link, Alert} from "@mui/material";
+import { LoadingButton } from "@mui/lab";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { registerSchema, type RegisterInput } from "../../features/auth/validation";
+import { register as apiRegister } from "../../features/auth/api";
 import { useState } from "react";
-import { useNavigate, Link as RouterLink } from "react-router-dom";
-import {
-    Container, Box, Typography, TextField, Button, Alert, Stack, Link
-} from "@mui/material";
-import { register } from "../../features/auth/api";
+import AuthLayout from "../../features/auth/components/AuthLayout.tsx";
+import FormErrorAlert from "../../features/auth/components/FormErrorAlert.tsx";
+import PasswordField from "../../features/auth/components/PasswordField.tsx";
+import axios from "axios";
+
+function getApiMessage(err: unknown): string {
+    if (axios.isAxiosError(err) && err.response?.data) {
+        const d = err.response.data;
+        return d.message || d.error || d.detail || "Registration failed";
+    }
+    return err instanceof Error ? err.message : "Registration failed";
+}
 
 export default function RegisterPage() {
     const navigate = useNavigate();
-    const [name, setName] = useState("");
-    const [surname, setSurname] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [submitting, setSubmitting] = useState(false);
-    const [error, setError] = useState<string | null>(null);
+    const [formError, setFormError] = useState<string | null>(null);
 
-    async function handleSubmit(e: React.FormEvent) {
-        e.preventDefault();
-        setError(null);
-        setSubmitting(true);
+    const { control, handleSubmit, formState: { isSubmitting } } = useForm<RegisterInput>({
+        resolver: zodResolver(registerSchema),
+        defaultValues: {
+            name: "", surname: "", email: "", password: "", confirmPassword: "",
+        },
+    });
+
+    const onSubmit = async (data: RegisterInput) => {
+        setFormError(null);
         try {
-            await register(name, surname, email, password);
+            await apiRegister(data.name, data.surname, data.email, data.password);
             navigate("/login", { replace: true });
-        } catch (err) {
-            const msg = err instanceof Error ? err.message : "Registration failed";
-            setError(msg);
-        } finally {
-            setSubmitting(false);
+        } catch (e) {
+            setFormError(getApiMessage(e));
         }
-    }
+    };
 
     return (
-        <Container maxWidth="xs">
-            <Box py={8}>
-                <Typography variant="h4" fontWeight={700} mb={2}>Create account</Typography>
-                <Typography color="text.secondary" mb={3}>
-                    It’s quick and easy.
-                </Typography>
+        <AuthLayout title="Create account" subtitle="It’s quick and easy.">
+            <FormErrorAlert message={formError} />
 
-                {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+            <Alert severity="info" sx={{ mb: 2 }}>
+                Password must be at least 8 characters, include one uppercase letter and one number.
+            </Alert>
 
-                <Box component="form" onSubmit={handleSubmit}>
-                    <Stack spacing={2}>
-                        <TextField label="Name" value={name} onChange={(e) => setName(e.target.value)} required fullWidth />
-                        <TextField label="Surname" value={surname} onChange={(e) => setSurname(e.target.value)} required fullWidth/>
-                        <TextField label="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required fullWidth />
-                        <TextField label="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required fullWidth />
-                        <Button type="submit" variant="contained" disabled={submitting}>
-                            {submitting ? "Creating..." : "Create account"}
-                        </Button>
-                    </Stack>
-                </Box>
+            <form onSubmit={handleSubmit(onSubmit)} noValidate>
+                <Stack spacing={2}>
+                    <Controller
+                        control={control}
+                        name="name"
+                        render={({ field, fieldState }) => (
+                            <TextField
+                                {...field}
+                                label="Name"
+                                error={!!fieldState.error}
+                                helperText={fieldState.error?.message}
+                                fullWidth
+                            />
+                        )}
+                    />
+                    <Controller
+                        control={control}
+                        name="surname"
+                        render={({ field, fieldState }) => (
+                            <TextField
+                                {...field}
+                                label="Surname"
+                                error={!!fieldState.error}
+                                helperText={fieldState.error?.message}
+                                fullWidth
+                            />
+                        )}
+                    />
+                    <Controller
+                        control={control}
+                        name="email"
+                        render={({ field, fieldState }) => (
+                            <TextField
+                                {...field}
+                                label="Email"
+                                type="email"
+                                error={!!fieldState.error}
+                                helperText={fieldState.error?.message}
+                                fullWidth
+                            />
+                        )}
+                    />
 
-                <Typography mt={2}>
-                    Already have an account?{" "}
-                    <Link component={RouterLink} to="/login">Sign in</Link>
-                </Typography>
-            </Box>
-        </Container>
+                    <PasswordField<RegisterInput> control={control} name="password" label="Password" />
+                    <PasswordField<RegisterInput> control={control} name="confirmPassword" label="Confirm password" />
+
+                    <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
+                        Create account
+                    </LoadingButton>
+                </Stack>
+            </form>
+
+            <Stack direction="row" spacing={1} mt={2} justifyContent="center">
+                <span>Already have an account?</span>
+                <Link component={RouterLink} to="/login">Sign in</Link>
+            </Stack>
+        </AuthLayout>
     );
 }

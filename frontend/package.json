@@ -14,6 +14,7 @@
     "@emotion/styled": "^11.14.1",
     "@hookform/resolvers": "^5.2.1",
     "@mui/icons-material": "^7.3.2",
+    "@mui/lab": "^7.0.0-beta.17",
     "@mui/material": "^7.3.2",
     "axios": "^1.11.0",
     "react": "^19.1.1",
