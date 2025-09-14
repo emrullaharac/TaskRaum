@@ -45,12 +45,12 @@ class TaskRepositoryTest {
     @Test
     void findTopByProjectIdAndStatusOrderByOrderDesc_returnsHighestOrder() {
         repo.saveAll(List.of(
-                task("t1", "p1", TaskStatus.IN_PROGRESS, 100),
-                task("t2", "p1", TaskStatus.IN_PROGRESS, 500),
-                task("t3", "p1", TaskStatus.IN_PROGRESS, 300)
+                task("t1", "p2", TaskStatus.IN_PROGRESS, 100),
+                task("t2", "p2", TaskStatus.IN_PROGRESS, 500),
+                task("t3", "p2", TaskStatus.IN_PROGRESS, 300)
         ));
 
-        Task last = repo.findTopByProjectIdAndStatusOrderByOrderDesc("p1", TaskStatus.IN_PROGRESS);
+        Task last = repo.findTopByProjectIdAndStatusOrderByOrderDesc("p2", TaskStatus.IN_PROGRESS);
 
         assertThat(last.getId()).isEqualTo("t2");
         assertThat(last.getOrder()).isEqualTo(500);
