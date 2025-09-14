@@ -36,7 +36,7 @@ class GlobalExceptionHandlerTest {
         assertThat(res.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         Assertions.assertNotNull(res.getBody());
         assertThat(res.getBody().error()).isEqualTo("NotFound");     // adapt getters (e.g., getCode())
-        assertThat(res.getBody().message()).isEqualTo("PROJECT_NOT_FOUND");
+        assertThat(res.getBody().message()).isEqualTo("Project not found");
     }
 
     @Test

@@ -33,11 +33,15 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ApiError> handleIllegalArgument(IllegalArgumentException ex) {
-        var msg = ex.getMessage();
-        HttpStatus status = "PROJECT_NOT_FOUND".equals(msg) ? HttpStatus.NOT_FOUND : HttpStatus.BAD_REQUEST;
-        var error = "PROJECT_NOT_FOUND".equals(msg) ? "NotFound" : "BadRequest";
-        return ResponseEntity.status(status)
-                .body(ApiError.of(error, msg, status.value()));
+        String code = ex.getMessage();
+        HttpStatus status = (code != null && code.endsWith("_NOT_FOUND")) ? HttpStatus.NOT_FOUND : HttpStatus.BAD_REQUEST;
+        String error = (status == HttpStatus.NOT_FOUND) ? "NotFound" : "BadRequest";
+        String message = switch (code) {
+            case "PROJECT_NOT_FOUND" -> "Project not found";
+            case "TASK_NOT_FOUND"    -> "Task not found";
+            default                  -> code != null ? code : "Bad request.";
+        };
+        return ResponseEntity.status(status).body(ApiError.of(error, message, status.value()));
     }
 
     @ExceptionHandler(IllegalStateException.class)
