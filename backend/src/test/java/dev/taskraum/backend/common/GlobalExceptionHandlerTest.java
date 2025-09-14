@@ -35,8 +35,17 @@ class GlobalExceptionHandlerTest {
         var res = handler.handleIllegalArgument(new IllegalArgumentException("PROJECT_NOT_FOUND"));
         assertThat(res.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         Assertions.assertNotNull(res.getBody());
-        assertThat(res.getBody().error()).isEqualTo("NotFound");     // adapt getters (e.g., getCode())
+        assertThat(res.getBody().error()).isEqualTo("NotFound");
         assertThat(res.getBody().message()).isEqualTo("Project not found");
+    }
+
+    @Test
+    void handleIllegalArgument_notFoundWhenTaskNotFound() {
+        var res = handler.handleIllegalArgument(new IllegalArgumentException("TASK_NOT_FOUND"));
+        assertThat(res.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(res.getBody()).isNotNull();
+        assertThat(res.getBody().error()).isEqualTo("NotFound");
+        assertThat(res.getBody().message()).isEqualTo("Task not found");
     }
 
     @Test
