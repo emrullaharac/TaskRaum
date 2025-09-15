@@ -60,7 +60,7 @@ public class UserService {
         if (!passwordEncoder.matches(dto.currentPassword(), user.getPasswordHash())) {
             throw new BadCredentialsException("Invalid password");
         }
-        user.setPasswordHash(passwordEncoder.encode(dto.currentPassword()));
+        user.setPasswordHash(passwordEncoder.encode(dto.newPassword()));
         repo.save(user);
     }
 }
