@@ -4,6 +4,7 @@ import dev.taskraum.backend.common.enums.ProjectStatus;
 import dev.taskraum.backend.projects.dto.CreateProjectDto;
 import dev.taskraum.backend.projects.dto.ProjectResponse;
 import dev.taskraum.backend.projects.dto.UpdateProjectDto;
+import dev.taskraum.backend.tasks.TaskRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -25,12 +26,13 @@ import static org.mockito.Mockito.*;
 class ProjectServiceTest {
 
     @Mock private ProjectRepository projectRepo;
+    @Mock private TaskRepository taskRepo;
     private ProjectService service;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        service = new ProjectService(projectRepo);
+        service = new ProjectService(projectRepo,  taskRepo);
     }
 
     @Test

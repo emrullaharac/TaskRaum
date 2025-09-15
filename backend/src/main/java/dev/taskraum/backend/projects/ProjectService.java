@@ -4,6 +4,7 @@ import dev.taskraum.backend.common.enums.ProjectStatus;
 import dev.taskraum.backend.projects.dto.CreateProjectDto;
 import dev.taskraum.backend.projects.dto.ProjectResponse;
 import dev.taskraum.backend.projects.dto.UpdateProjectDto;
+import dev.taskraum.backend.tasks.TaskRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class ProjectService {
     private final ProjectRepository projectRepo;
-    // taskRepo for delete
+    private final TaskRepository taskRepo;
 
     public Page<ProjectResponse> list(String ownerId, ProjectStatus status, Pageable pageable) {
         return projectRepo.findByOwnerIdAndStatus(ownerId, status, pageable).map(this::toResponse);
@@ -64,7 +65,7 @@ public class ProjectService {
         Project p = projectRepo.findByIdAndOwnerId(id, ownerId)
                 .orElseThrow(() -> new IllegalArgumentException("PROJECT_NOT_FOUND"));
 
-        // taskRepo delete Orphan Tasks with id(Project)
+        taskRepo.deleteByProjectId(p.getId());
 
         projectRepo.delete(p);
     }
