@@ -74,7 +74,7 @@ public class TaskService {
         Task task = Task.builder()
                 .projectId(project.getId())
                 .title(dto.getTitle().trim())
-                .description(dto.getDescription())
+                .description(dto.getDescription().trim())
                 .status(status)
                 .order(order)
                 .priority(dto.getPriority() != null ? dto.getPriority() : TaskPriority.MEDIUM)
@@ -107,7 +107,7 @@ public class TaskService {
         }
 
         if (dto.getTitle() != null) task.setTitle(dto.getTitle().trim());
-        if (dto.getDescription() != null) task.setDescription(dto.getDescription());
+        if (dto.getDescription() != null) task.setDescription(dto.getDescription().trim());
         if (dto.getPriority() != null) task.setPriority(dto.getPriority());
         if (dto.getDueDate() != null) task.setDueDate(dto.getDueDate());
         if (dto.getAssigneeId() != null) task.setAssigneeId(dto.getAssigneeId());

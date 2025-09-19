@@ -25,8 +25,8 @@ public class ProjectService {
     public ProjectResponse create(String ownerId, CreateProjectDto dto) {
         Project p = Project.builder()
                 .ownerId(ownerId)
-                .title(dto.getTitle())
-                .description(dto.getDescription())
+                .title(dto.getTitle().trim())
+                .description(dto.getDescription().trim())
                 .status(ProjectStatus.ACTIVE)
                 .build();
         return toResponse(projectRepo.save(p));
@@ -54,8 +54,8 @@ public class ProjectService {
             p.setStatus(dto.getStatus());
         }
 
-        if (dto.getTitle() != null) p.setTitle(dto.getTitle());
-        if (dto.getDescription() != null) p.setDescription(dto.getDescription());
+        if (dto.getTitle() != null) p.setTitle(dto.getTitle().trim());
+        if (dto.getDescription() != null) p.setDescription(dto.getDescription().trim());
 
         return toResponse(projectRepo.save(p));
     }
