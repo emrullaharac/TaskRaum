@@ -9,7 +9,7 @@ import lombok.Data;
 import java.time.LocalDate;
 
 @Data
-public class CreateTaskDto {
+public class TaskDto {
     @NotBlank @Size(min = 1, max = 160)
     private String title;
 

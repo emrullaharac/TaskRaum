@@ -2,9 +2,8 @@ package dev.taskraum.backend.tasks;
 
 import dev.taskraum.backend.common.enums.TaskStatus;
 import dev.taskraum.backend.security.UserPrincipal;
-import dev.taskraum.backend.tasks.dto.CreateTaskDto;
+import dev.taskraum.backend.tasks.dto.TaskDto;
 import dev.taskraum.backend.tasks.dto.TaskResponse;
-import dev.taskraum.backend.tasks.dto.UpdateTaskDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -33,7 +32,7 @@ public class TaskController {
     public ResponseEntity<TaskResponse> create(
             @AuthenticationPrincipal UserPrincipal me,
             @PathVariable String projectId,
-            @RequestBody @Valid CreateTaskDto dto
+            @RequestBody @Valid TaskDto dto
             ) {
         var res = service.create(me.id(), projectId, dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(res);
@@ -43,7 +42,7 @@ public class TaskController {
     public TaskResponse update(
             @AuthenticationPrincipal UserPrincipal me,
             @PathVariable String id,
-            @RequestBody @Valid UpdateTaskDto dto
+            @RequestBody @Valid TaskDto dto
     ) {
         return service.update(me.id(), id, dto);
     }

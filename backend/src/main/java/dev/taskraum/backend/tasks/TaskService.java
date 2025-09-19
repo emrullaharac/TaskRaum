@@ -5,9 +5,8 @@ import dev.taskraum.backend.common.enums.TaskPriority;
 import dev.taskraum.backend.common.enums.TaskStatus;
 import dev.taskraum.backend.projects.Project;
 import dev.taskraum.backend.projects.ProjectRepository;
-import dev.taskraum.backend.tasks.dto.CreateTaskDto;
+import dev.taskraum.backend.tasks.dto.TaskDto;
 import dev.taskraum.backend.tasks.dto.TaskResponse;
-import dev.taskraum.backend.tasks.dto.UpdateTaskDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -64,7 +63,7 @@ public class TaskService {
     }
 
     @Transactional
-    public TaskResponse create(String ownerId, String projectId, CreateTaskDto dto) {
+    public TaskResponse create(String ownerId, String projectId, TaskDto dto) {
         var project =  requireOwnedProject(ownerId, projectId);
         ensureNotArchived(project);
 
@@ -89,7 +88,7 @@ public class TaskService {
     }
 
     @Transactional
-    public TaskResponse update(String ownerId, String taskId, UpdateTaskDto dto) {
+    public TaskResponse update(String ownerId, String taskId, TaskDto dto) {
         Task task = taskRepo.findById(taskId)
                 .orElseThrow(() -> new IllegalArgumentException("TASK_NOT_FOUND"));
 
