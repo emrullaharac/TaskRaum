@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Value;
 
 import java.time.Instant;
+import java.time.LocalDate;
 
 @Value
 @Builder
@@ -17,7 +18,7 @@ public class TaskResponse {
     TaskStatus status;
     Integer order;
     TaskPriority priority;
-    Instant dueDate;
+    LocalDate dueDate;
     String assigneeId;
     Instant createdAt;
     Instant updatedAt;

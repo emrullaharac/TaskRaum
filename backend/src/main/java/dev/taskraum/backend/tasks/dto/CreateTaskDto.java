@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
-import java.time.Instant;
+import java.time.LocalDate;
 
 @Data
 public class CreateTaskDto {
@@ -19,6 +19,6 @@ public class CreateTaskDto {
     private TaskStatus status;
     private Integer order;
     private TaskPriority priority;
-    private Instant dueDate;
+    private LocalDate dueDate;
     private String assigneeId;
 }
