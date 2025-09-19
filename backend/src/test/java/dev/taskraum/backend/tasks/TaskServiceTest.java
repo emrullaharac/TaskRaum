@@ -5,9 +5,8 @@ import dev.taskraum.backend.common.enums.TaskPriority;
 import dev.taskraum.backend.common.enums.TaskStatus;
 import dev.taskraum.backend.projects.Project;
 import dev.taskraum.backend.projects.ProjectRepository;
-import dev.taskraum.backend.tasks.dto.CreateTaskDto;
+import dev.taskraum.backend.tasks.dto.TaskDto;
 import dev.taskraum.backend.tasks.dto.TaskResponse;
-import dev.taskraum.backend.tasks.dto.UpdateTaskDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -100,7 +99,7 @@ class TaskServiceTest {
                     .createdAt(Instant.now()).updatedAt(Instant.now()).build();
         });
 
-        var dto = new CreateTaskDto();
+        var dto = new TaskDto();
         dto.setTitle("   Title   ");
         TaskResponse res = service.create(owner, projectId, dto);
 
@@ -118,7 +117,7 @@ class TaskServiceTest {
         when(taskRepo.findTopByProjectIdAndStatusOrderByOrderDesc(projectId, TaskStatus.IN_PROGRESS))
                 .thenReturn(task("tLast", projectId, TaskStatus.IN_PROGRESS, 300));
 
-        var dto =  new CreateTaskDto();
+        var dto =  new TaskDto();
         dto.setTitle("X");
         dto.setStatus(TaskStatus.IN_PROGRESS);
         dto.setPriority(TaskPriority.HIGH);
@@ -137,7 +136,7 @@ class TaskServiceTest {
         when(projectRepo.findByIdAndOwnerId(projectId, owner))
                 .thenReturn(Optional.of(project(projectId, ProjectStatus.ARCHIVED)));
 
-        var dto = new CreateTaskDto(); dto.setTitle("X");
+        var dto = new TaskDto(); dto.setTitle("X");
 
         assertThatThrownBy(() -> service.create(owner, projectId, dto))
                 .isInstanceOf(IllegalStateException.class)
@@ -154,7 +153,7 @@ class TaskServiceTest {
                 .thenReturn(task("last", "p1", TaskStatus.DONE, 700));
         when(taskRepo.save(any())).thenAnswer(i -> i.getArgument(0));
 
-        var dto = new UpdateTaskDto();
+        var dto = new TaskDto();
         dto.setStatus(TaskStatus.DONE); // move column, no explicit order
 
         TaskResponse res = service.update("u1", "t1", dto);
@@ -171,7 +170,7 @@ class TaskServiceTest {
                 .thenReturn(Optional.of(project("p1", ProjectStatus.ACTIVE)));
         when(taskRepo.save(any())).thenAnswer(i -> i.getArgument(0));
 
-        var dto = new UpdateTaskDto(); // no changes
+        var dto = new TaskDto(); // no changes
 
         TaskResponse res = service.update("u1", "t1", dto);
 
@@ -187,7 +186,7 @@ class TaskServiceTest {
                 .thenReturn(Optional.of(project("p1", ProjectStatus.ACTIVE)));
         when(taskRepo.save(any())).thenAnswer(i -> i.getArgument(0));
 
-        var dto = new UpdateTaskDto();
+        var dto = new TaskDto();
         dto.setOrder(42);
 
         TaskResponse res = service.update("u1", "t1", dto);
@@ -202,7 +201,7 @@ class TaskServiceTest {
                 .thenReturn(Optional.of(project("p1", ProjectStatus.ACTIVE)));
         when(taskRepo.save(any())).thenAnswer(i -> i.getArgument(0));
 
-        var dto = new UpdateTaskDto();
+        var dto = new TaskDto();
         dto.setTitle("   New    ");
         dto.setDescription("Desc");
         dto.setPriority(TaskPriority.LOW);
@@ -217,7 +216,7 @@ class TaskServiceTest {
     @Test
     void update_throws_whenTaskNotFound() {
         when(taskRepo.findById("tX")).thenReturn(Optional.empty());
-        assertThatThrownBy(() -> service.update("u1", "tX", new UpdateTaskDto()))
+        assertThatThrownBy(() -> service.update("u1", "tX", new TaskDto()))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("TASK_NOT_FOUND");
     }
@@ -228,7 +227,7 @@ class TaskServiceTest {
         when(taskRepo.findById("t1")).thenReturn(Optional.of(existing));
         when(projectRepo.findByIdAndOwnerId("p1", "u1")).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> service.update("u1", "t1", new UpdateTaskDto()))
+        assertThatThrownBy(() -> service.update("u1", "t1", new TaskDto()))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("PROJECT_NOT_FOUND");
     }

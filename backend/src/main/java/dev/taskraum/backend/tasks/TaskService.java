@@ -5,9 +5,8 @@ import dev.taskraum.backend.common.enums.TaskPriority;
 import dev.taskraum.backend.common.enums.TaskStatus;
 import dev.taskraum.backend.projects.Project;
 import dev.taskraum.backend.projects.ProjectRepository;
-import dev.taskraum.backend.tasks.dto.CreateTaskDto;
+import dev.taskraum.backend.tasks.dto.TaskDto;
 import dev.taskraum.backend.tasks.dto.TaskResponse;
-import dev.taskraum.backend.tasks.dto.UpdateTaskDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -64,16 +63,19 @@ public class TaskService {
     }
 
     @Transactional
-    public TaskResponse create(String ownerId, String projectId, CreateTaskDto dto) {
+    public TaskResponse create(String ownerId, String projectId, TaskDto dto) {
         var project =  requireOwnedProject(ownerId, projectId);
         ensureNotArchived(project);
 
         TaskStatus status = dto.getStatus() != null ? dto.getStatus() : TaskStatus.TODO;
         int order =  dto.getOrder() != null ? dto.getOrder() : nextOrder(projectId, status);
 
+        if (dto.getTitle() != null) dto.setTitle(dto.getTitle().trim());
+        if (dto.getDescription() != null) dto.setDescription(dto.getDescription().trim());
+
         Task task = Task.builder()
                 .projectId(project.getId())
-                .title(dto.getTitle().trim())
+                .title(dto.getTitle())
                 .description(dto.getDescription())
                 .status(status)
                 .order(order)
@@ -86,7 +88,7 @@ public class TaskService {
     }
 
     @Transactional
-    public TaskResponse update(String ownerId, String taskId, UpdateTaskDto dto) {
+    public TaskResponse update(String ownerId, String taskId, TaskDto dto) {
         Task task = taskRepo.findById(taskId)
                 .orElseThrow(() -> new IllegalArgumentException("TASK_NOT_FOUND"));
 
@@ -107,7 +109,7 @@ public class TaskService {
         }
 
         if (dto.getTitle() != null) task.setTitle(dto.getTitle().trim());
-        if (dto.getDescription() != null) task.setDescription(dto.getDescription());
+        if (dto.getDescription() != null) task.setDescription(dto.getDescription().trim());
         if (dto.getPriority() != null) task.setPriority(dto.getPriority());
         if (dto.getDueDate() != null) task.setDueDate(dto.getDueDate());
         if (dto.getAssigneeId() != null) task.setAssigneeId(dto.getAssigneeId());

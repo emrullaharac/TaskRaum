@@ -15,6 +15,7 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.Instant;
+import java.time.LocalDate;
 
 @Document("tasks")
 @Data @Builder @AllArgsConstructor @NoArgsConstructor
@@ -33,7 +34,7 @@ public class Task {
     @Indexed private Integer order;
     private TaskPriority priority;
 
-    private Instant dueDate;
+    private LocalDate dueDate;
     private String assigneeId;
 
     @CreatedDate private Instant createdAt;

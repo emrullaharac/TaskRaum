@@ -3,9 +3,8 @@ package dev.taskraum.backend.tasks;
 
 import dev.taskraum.backend.common.enums.TaskStatus;
 import dev.taskraum.backend.security.UserPrincipal;
-import dev.taskraum.backend.tasks.dto.CreateTaskDto;
+import dev.taskraum.backend.tasks.dto.TaskDto;
 import dev.taskraum.backend.tasks.dto.TaskResponse;
-import dev.taskraum.backend.tasks.dto.UpdateTaskDto;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -82,7 +81,7 @@ class TaskControllerTest {
     @Test
     void create_valid_returns201() throws Exception {
         var auth = SecurityContextHolder.getContext().getAuthentication();
-        when(service.create(eq("u1"), eq("p1"), any(CreateTaskDto.class)))
+        when(service.create(eq("u1"), eq("p1"), any(TaskDto.class)))
                 .thenReturn(resp("t1"));
 
         var body = """
@@ -113,7 +112,7 @@ class TaskControllerTest {
     @Test
     void update_ok_returns200() throws Exception {
         var auth = SecurityContextHolder.getContext().getAuthentication();
-        when(service.update(eq("u1"), eq("t1"), any(UpdateTaskDto.class)))
+        when(service.update(eq("u1"), eq("t1"), any(TaskDto.class)))
                 .thenReturn(resp("t1"));
 
         var body = """

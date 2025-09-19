@@ -6,10 +6,10 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
-import java.time.Instant;
+import java.time.LocalDate;
 
 @Data
-public class UpdateTaskDto {
+public class TaskDto {
     @NotBlank @Size(min = 1, max = 160)
     private String title;
 
@@ -19,6 +19,6 @@ public class UpdateTaskDto {
     private TaskStatus status;
     private Integer order;
     private TaskPriority priority;
-    private Instant dueDate;
+    private LocalDate dueDate;
     private String assigneeId;
 }
