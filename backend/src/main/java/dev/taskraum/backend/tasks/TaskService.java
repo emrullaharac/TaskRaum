@@ -71,10 +71,13 @@ public class TaskService {
         TaskStatus status = dto.getStatus() != null ? dto.getStatus() : TaskStatus.TODO;
         int order =  dto.getOrder() != null ? dto.getOrder() : nextOrder(projectId, status);
 
+        if (dto.getTitle() != null) dto.setTitle(dto.getTitle().trim());
+        if (dto.getDescription() != null) dto.setDescription(dto.getDescription().trim());
+
         Task task = Task.builder()
                 .projectId(project.getId())
-                .title(dto.getTitle().trim())
-                .description(dto.getDescription().trim())
+                .title(dto.getTitle())
+                .description(dto.getDescription())
                 .status(status)
                 .order(order)
                 .priority(dto.getPriority() != null ? dto.getPriority() : TaskPriority.MEDIUM)
