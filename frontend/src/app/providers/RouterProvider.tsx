@@ -10,6 +10,7 @@ import NotFoundPage from "../../pages/System/NotFoundPage";
 import { RequireAuth } from "../../features/auth/guards";
 import { useAuthStore } from "../../store/authStore";
 import { Box, CircularProgress } from "@mui/material";
+import ProjectsPage from "../../features/projects/ProjectsPage.tsx";
 
 function AuthGate({ children }: { children: ReactNode }) {
     const { user } = useAuthStore();
@@ -46,6 +47,7 @@ export function RouterProvider() {
                 <Route element={<RequireAuth />}>
                     <Route path="/app" element={<AppLayout />}>
                         <Route index element={<DashboardPage />} />
+                        <Route path="projects" element={<ProjectsPage />} />
                     </Route>
                 </Route>
 
