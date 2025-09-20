@@ -4,7 +4,8 @@ import HomePage from "../../pages/Home/HomePage";
 import AboutPage from "../../pages/About/AboutPage";
 import LoginPage from "../../pages/Auth/LoginPage";
 import RegisterPage from "../../pages/Auth/RegisterPage";
-import DashboardPage from "../../pages/Dashboard/DashboardPage";
+import DashboardPage from "../../features/dashboard/DashboardPage.tsx";
+import AppLayout from "../../components/Layout/AppLayout.tsx";
 import NotFoundPage from "../../pages/System/NotFoundPage";
 import { RequireAuth } from "../../features/auth/guards";
 import { useAuthStore } from "../../store/authStore";
@@ -43,7 +44,9 @@ export function RouterProvider() {
 
                 {/* Private */}
                 <Route element={<RequireAuth />}>
-                    <Route path="/app" element={<DashboardPage />} />
+                    <Route path="/app" element={<AppLayout />}>
+                        <Route index element={<DashboardPage />} />
+                    </Route>
                 </Route>
 
                 {/* 404 */}
