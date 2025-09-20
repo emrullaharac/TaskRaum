@@ -5,13 +5,13 @@ import GitHubIcon from '@mui/icons-material/GitHub';
 
 export default function AboutPage() {
     return (
-        <Box sx={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
-            <SiteTopBar />
+        <Box sx={{minHeight: "100vh", display: "flex", flexDirection: "column"}}>
+            <SiteTopBar/>
 
             {/* MAIN */}
-            <Box component="main" sx={{ flex: 1 }}>
+            <Box component="main" sx={{flex: 1}}>
                 <Container maxWidth="md">
-                    <Box sx={{ py: 20}}>
+                    <Box sx={{py: 20}}>
                         <Typography variant="h4" fontWeight={800} gutterBottom>
                             About TaskRaum
                         </Typography>
@@ -43,16 +43,16 @@ export default function AboutPage() {
                                     whiteSpace: "nowrap",
                                 }}
                             >
-                                <GitHubIcon fontSize="small" />
+                                <GitHubIcon fontSize="small"/>
                                 GitHub
                             </Link>
-                            </Stack>
+                        </Stack>
                     </Box>
                 </Container>
             </Box>
 
             {/* FOOTER */}
-            <AppFooter />
+            <AppFooter/>
         </Box>
     );
 }
