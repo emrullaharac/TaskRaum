@@ -1,14 +1,11 @@
 import axios, { AxiosError } from "axios";
 
-export const API_BASE = import.meta.env.DEV ? "/api" : "";
-
 export const api = axios.create({
-    baseURL: API_BASE,
+    baseURL: "",
     withCredentials: true,
-    headers: { "Content-Type": "application/json" },
+    headers: {"Content-Type": "application/json"},
 });
 
-// --- NEW: logout guard ---
 let isLoggingOut = false;
 export function setLoggingOut(v: boolean) {
     isLoggingOut = v;
@@ -64,7 +61,7 @@ api.interceptors.response.use(
         try {
             isRefreshing = true;
             // raw axios to avoid this interceptor
-            await axios.post(`${API_BASE}/auth/refresh`, undefined, {
+            await axios.post(`/auth/refresh`, undefined, {
                 withCredentials: true,
                 headers: { "Content-Type": "application/json" },
                 skipAuthRedirect: true,

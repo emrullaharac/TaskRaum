@@ -4,11 +4,16 @@ import HomePage from "../../pages/Home/HomePage";
 import AboutPage from "../../pages/About/AboutPage";
 import LoginPage from "../../pages/Auth/LoginPage";
 import RegisterPage from "../../pages/Auth/RegisterPage";
-import DashboardPage from "../../pages/Dashboard/DashboardPage";
+import DashboardPage from "../../features/dashboard/DashboardPage.tsx";
+import AppLayout from "../../components/Layout/AppLayout.tsx";
 import NotFoundPage from "../../pages/System/NotFoundPage";
 import { RequireAuth } from "../../features/auth/guards";
 import { useAuthStore } from "../../store/authStore";
 import { Box, CircularProgress } from "@mui/material";
+import ProjectsPage from "../../features/projects/ProjectsPage.tsx";
+import TasksPage from "../../features/tasks/TasksPage.tsx";
+import SettingsPage from "../../features/settings/SettingsPage.tsx";
+import CalendarPage from "../../features/calendar/CalendarPage.tsx";
 
 function AuthGate({ children }: { children: ReactNode }) {
     const { user } = useAuthStore();
@@ -43,7 +48,13 @@ export function RouterProvider() {
 
                 {/* Private */}
                 <Route element={<RequireAuth />}>
-                    <Route path="/app" element={<DashboardPage />} />
+                    <Route path="/app" element={<AppLayout />}>
+                        <Route index element={<DashboardPage />} />
+                        <Route path="projects" element={<ProjectsPage />} />
+                        <Route path="tasks" element={<TasksPage />} />
+                        <Route path="calendar" element={<CalendarPage />} />
+                        <Route path="settings" element={<SettingsPage />} />
+                    </Route>
                 </Route>
 
                 {/* 404 */}
