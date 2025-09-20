@@ -13,6 +13,7 @@ import { Box, CircularProgress } from "@mui/material";
 import ProjectsPage from "../../features/projects/ProjectsPage.tsx";
 import TasksPage from "../../features/tasks/TasksPage.tsx";
 import SettingsPage from "../../features/settings/SettingsPage.tsx";
+import CalendarPage from "../../features/calendar/CalendarPage.tsx";
 
 function AuthGate({ children }: { children: ReactNode }) {
     const { user } = useAuthStore();
@@ -51,6 +52,7 @@ export function RouterProvider() {
                         <Route index element={<DashboardPage />} />
                         <Route path="projects" element={<ProjectsPage />} />
                         <Route path="tasks" element={<TasksPage />} />
+                        <Route path="calendar" element={<CalendarPage />} />
                         <Route path="settings" element={<SettingsPage />} />
                     </Route>
                 </Route>
