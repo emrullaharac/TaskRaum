@@ -1,6 +1,6 @@
 import { api } from "../../api/client";
-
-export type UserDto = { id: string; name: string; surname?: string; email: string; };
+import type { UserDto } from "../../types/domain";
+import { normalizeUser } from "../../types/normalizers";
 
 export async function login(email: string, password: string) {
     await api.post("/auth/login", { email, password });
@@ -12,8 +12,8 @@ export async function register(name: string, surname: string, email: string, pas
 
 export async function me(): Promise<UserDto | null> {
     try {
-        const { data } = await api.get<UserDto>("/auth/me", { skipAuthRedirect: true });
-        return data;
+        const { data } = await api.get("/auth/me", { skipAuthRedirect: true });
+        return normalizeUser(data);
     } catch {
         return null;
     }

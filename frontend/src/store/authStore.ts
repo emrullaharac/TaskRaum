@@ -1,5 +1,6 @@
 import { create } from "zustand";
-import { me, logout as apiLogout, type UserDto } from "../features/auth/api";
+import { me, logout as apiLogout } from "../features/auth/api";
+import type { UserDto } from "../types/domain";
 import { setLoggingOut } from "../api/client";
 
 type AuthState = {
