@@ -5,7 +5,7 @@ export const loginSchema = z.object({
     password: z.string().min(1, "Password is required"),
 });
 
-const PASSWORD_RULE = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
+export const PASSWORD_RULE = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
 
 export const registerSchema = z.object({
     name: z.string().min(2, "Min. 2 characters"),
