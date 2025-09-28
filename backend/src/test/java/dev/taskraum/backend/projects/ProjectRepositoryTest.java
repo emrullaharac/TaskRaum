@@ -1,6 +1,7 @@
 package dev.taskraum.backend.projects;
 
 import dev.taskraum.backend.common.enums.ProjectStatus;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
@@ -12,6 +13,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 class ProjectRepositoryTest {
 
     @Autowired ProjectRepository repo;
+
+    @BeforeEach
+    void setUp() {
+        repo.deleteAll();
+    }
 
     @Test
     void queriesWorkAsExpected() {
