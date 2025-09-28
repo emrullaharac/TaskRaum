@@ -1,7 +1,9 @@
 # TaskRaum
 
-TaskRaum is a task and project management web app built as a **Capstone Project** during the [Java Development Bootcamp by neue fische GmbH](https://www.neuefische.de/bootcamp/java-development).  
-It is designed primarily for single-user usage, with a future roadmap toward multi-user support. This project was developed in 4 weeks using **Spring Boot (Java)** for the backend and **React + TypeScript** for the frontend.
+- TaskRaum is task and project management web app and built as a **Capstone Project** during the [Java Development Bootcamp by neue fische GmbH](https://www.neuefische.de/bootcamp/java-development)  
+- Designed primarily for **single-user usage**, with roadmap toward multi-user support  
+- Developed in **4 weeks** using **Spring Boot (Java)** (backend) and **React + TypeScript** (frontend)
+
 ---
 
 ## ✨ Features
