@@ -89,6 +89,7 @@
     </dependencies>
 
     <build>
+        <finalName>taskraum</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
