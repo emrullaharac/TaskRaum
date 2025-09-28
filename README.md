@@ -133,7 +133,7 @@ src/test/java/dev/taskraum/backend
 ### Tasks
 | Method | Endpoint                                               | Description          |
 |--------|--------------------------------------------------------|----------------------|
-| GET    | `/api/projects/{projectId}/tasks?status=TODO(Default)` | List tasks by status |
+| GET    | `/api/projects/{projectId}/tasks`                      | List tasks by status |
 | POST   | `/api/projects/{projectId}/tasks`                      | Create a new task    |
 | PUT    | `/api/tasks/{id}`                                      | Update task          |
 | DELETE | `/api/tasks/{id}`                                      | Delete task          |
@@ -183,4 +183,4 @@ src/test/java/dev/taskraum/backend
 ---
 
 ## 📄 License
-Licensed under the **MIT License**.
+Licensed under the [**MIT License**](./LICENSE).
