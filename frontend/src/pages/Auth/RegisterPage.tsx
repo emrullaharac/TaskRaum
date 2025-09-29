@@ -1,4 +1,4 @@
-import {Stack, TextField, Link, Alert} from "@mui/material";
+import { Stack, TextField, Link, Alert, FormControlLabel, Checkbox, FormHelperText } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
@@ -22,16 +22,29 @@ function getApiMessage(err: unknown): string {
 export default function RegisterPage() {
     const navigate = useNavigate();
     const [formError, setFormError] = useState<string | null>(null);
+    const [acceptPrivacy, setAcceptPrivacy] = useState(false);
+    const [showPrivacyError, setShowPrivacyError] = useState(false);
 
     const { control, handleSubmit, formState: { isSubmitting } } = useForm<RegisterInput>({
         resolver: zodResolver(registerSchema),
         defaultValues: {
-            name: "", surname: "", email: "", password: "", confirmPassword: "",
+            name: "",
+            surname: "",
+            email: "",
+            password: "",
+            confirmPassword: "",
         },
     });
 
     const onSubmit = async (data: RegisterInput) => {
         setFormError(null);
+        setShowPrivacyError(false);
+
+        if (!acceptPrivacy) {
+            setShowPrivacyError(true);
+            return;
+        }
+
         try {
             await apiRegister(data.name, data.surname, data.email, data.password);
             navigate("/login", { replace: true });
@@ -43,6 +56,11 @@ export default function RegisterPage() {
     return (
         <AuthLayout title="Create account" subtitle="It’s quick and easy.">
             <FormErrorAlert message={formError} />
+
+            <Alert severity="warning" sx={{ mb: 2 }}>
+                This is a demo project. Please avoid using real personal data. See our{" "}
+                <Link component={RouterLink} to="/privacy">Privacy Notice</Link>.
+            </Alert>
 
             <Alert severity="info" sx={{ mb: 2 }}>
                 Password must be at least 8 characters, include one uppercase letter and one number.
@@ -94,7 +112,34 @@ export default function RegisterPage() {
                     <PasswordField<RegisterInput> control={control} name="password" label="Password" />
                     <PasswordField<RegisterInput> control={control} name="confirmPassword" label="Confirm password" />
 
-                    <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
+                    <div>
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={acceptPrivacy}
+                                    onChange={(e) => setAcceptPrivacy(e.target.checked)}
+                                />
+                            }
+                            label={
+                                <>
+                                    I have read and agree to the{" "}
+                                    <Link component={RouterLink} to="/privacy">Privacy Notice</Link>.
+                                </>
+                            }
+                        />
+                        {showPrivacyError && !acceptPrivacy && (
+                            <FormHelperText error>
+                                You must agree to the Privacy Notice to continue.
+                            </FormHelperText>
+                        )}
+                    </div>
+
+                    <LoadingButton
+                        type="submit"
+                        variant="contained"
+                        loading={isSubmitting}
+                        disabled={!acceptPrivacy}
+                    >
                         Create account
                     </LoadingButton>
                 </Stack>
