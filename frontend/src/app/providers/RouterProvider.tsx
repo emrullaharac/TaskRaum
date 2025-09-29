@@ -11,6 +11,7 @@ import AboutPage from "../../pages/About/AboutPage";
 import LoginPage from "../../pages/Auth/LoginPage";
 import RegisterPage from "../../pages/Auth/RegisterPage";
 import NotFoundPage from "../../pages/System/NotFoundPage";
+import PrivacyPage from "../../pages/Privacy/PrivacyPage";
 
 import DashboardPage from "../../features/dashboard/DashboardPage.tsx";
 import ProjectsPage from "../../features/projects/ProjectsPage.tsx";
@@ -48,6 +49,7 @@ export function RouterProvider() {
                 <Route path="/about" element={<AboutPage />} />
                 <Route path="/login" element={<AuthGate><LoginPage /></AuthGate>} />
                 <Route path="/register" element={<AuthGate><RegisterPage /></AuthGate>} />
+                <Route path="/privacy" element={<PrivacyPage />}/>
 
                 {/* Private */}
                 <Route element={<RequireAuth />}>
