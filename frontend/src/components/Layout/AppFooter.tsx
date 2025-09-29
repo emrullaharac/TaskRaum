@@ -76,6 +76,19 @@ export default function AppFooter() {
                     <Typography variant="body2" color="text.secondary">·</Typography>
 
                     <Link
+                        component={RouterLink}
+                        to="/privacy"
+                        underline="hover"
+                        color="inherit"
+                        variant="body2"
+                        sx={{ whiteSpace: "nowrap" }}
+                    >
+                        Privacy
+                    </Link>
+
+                    <Typography variant="body2" color="text.secondary">·</Typography>
+
+                    <Link
                         href="https://github.com/emrullaharac/TaskRaum"
                         underline="hover"
                         color="inherit"
