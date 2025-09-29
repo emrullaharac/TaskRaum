@@ -34,6 +34,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/", "/index.html", "/assets/**").permitAll()
+                        .requestMatchers("/app", "/app/**").permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
@@ -48,7 +49,9 @@ public class SecurityConfig {
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         // Important: since cookies being sent, DO NOT use "*"
-        config.setAllowedOrigins(java.util.List.of("http://localhost:5173"));
+        config.setAllowedOrigins(java.util.List.of("http://localhost:5173",
+                "http://localhost:8080",
+                "https://taskraum.onrender.com"));
         config.setAllowedMethods(java.util.List.of("GET","POST","PUT","DELETE","PATCH","OPTIONS"));
         config.setAllowedHeaders(java.util.List.of("Content-Type","Authorization"));
         config.setAllowCredentials(true); // required for cookies
