@@ -1,0 +1,8 @@
+.git
+**/.DS_Store
+frontend/node_modules
+frontend/dist
+
+# ignore targets except the final jar
+backend/target/*
+!backend/target/taskraum.jar

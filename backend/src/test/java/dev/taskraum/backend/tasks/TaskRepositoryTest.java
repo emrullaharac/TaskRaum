@@ -2,6 +2,7 @@ package dev.taskraum.backend.tasks;
 
 import dev.taskraum.backend.common.enums.TaskPriority;
 import dev.taskraum.backend.common.enums.TaskStatus;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
@@ -15,6 +16,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 class TaskRepositoryTest {
 
     @Autowired private TaskRepository repo;
+
+    @BeforeEach
+    void setUp() {
+        repo.deleteAll();
+    }
 
     private Task task(String id, String projectId, TaskStatus status, int order) {
         return Task.builder()
