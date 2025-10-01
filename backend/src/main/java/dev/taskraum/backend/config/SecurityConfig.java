@@ -34,7 +34,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/", "/index.html", "/assets/**").permitAll()
-                        .requestMatchers("/app", "/app/**").permitAll()
+                        // permit all "non-dot" paths (SPA routes)
+                        .requestMatchers("/{path:^(?!auth|api|assets|index\\.html)[^\\.]*}",
+                                "/**/{path:^(?!auth|api|assets)[^\\.]*}").permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
