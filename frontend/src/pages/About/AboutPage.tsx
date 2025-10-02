@@ -10,11 +10,11 @@ import AppFooter from "../../components/Layout/AppFooter";
 type Shot = { src: string; title: string };
 
 const screenshots: Shot[] = [
-    { src: "/screenshots/Dashboard.png", title: "Dashboard – KPIs & Upcoming Deadlines" },
-    { src: "/screenshots/Projects.png", title: "Projects – Active / Paused / Archived" },
-    { src: "/screenshots/Tasks.png", title: "Tasks – Kanban with Drag & Drop" },
-    { src: "/screenshots/Calendar.png", title: "Calendar (DnD) – Overdue / Upcoming / Done" },
-    { src: "/screenshots/Settings.png", title: "Settings – Profile & Password" },
+    { src: "assets/screenshots/Dashboard.png", title: "Dashboard – KPIs & Upcoming Deadlines" },
+    { src: "assets/screenshots/Projects.png", title: "Projects – Active / Paused / Archived" },
+    { src: "assets/screenshots/Tasks.png", title: "Tasks – Kanban with Drag & Drop" },
+    { src: "assets/screenshots/Calendar.png", title: "Calendar (DnD) – Overdue / Upcoming / Done" },
+    { src: "assets/screenshots/Settings.png", title: "Settings – Profile & Password" },
 ];
 
 function TechChips() {
