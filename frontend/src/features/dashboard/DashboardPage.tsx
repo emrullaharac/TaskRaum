@@ -138,11 +138,11 @@ export default function DashboardPage() {
                     <Grid key={i} size={{ xs: 12, md: 3 }}>
                         <Card elevation={0} sx={{ ...k.sx, borderRadius: 3 }}>
                             <CardContent>
-                                <Stack direction="row" alignItems="center" justifyContent="space-between">
-                                    <Typography variant="subtitle2" color="text.secondary">{k.label}</Typography>
+                                <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ color: "rgba(0,0,0,0.7)" }}>
+                                    <Typography variant="subtitle2" color="text.secondary" sx={{ color: "rgba(0,0,0,0.7)" }}>{k.label}</Typography>
                                     {k.icon}
                                 </Stack>
-                                <Typography variant="h4" fontWeight="bold" mt={0.5}>{k.value}</Typography>
+                                <Typography variant="h4" fontWeight="bold" mt={0.5} sx={{ color: "rgba(0,0,0,0.9)" }}>{k.value}</Typography>
                             </CardContent>
                         </Card>
                     </Grid>
