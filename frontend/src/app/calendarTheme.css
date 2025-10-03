@@ -1,0 +1,29 @@
+/* Dark-mode friendly FullCalendar tweaks */
+body.taskraum-dark .fc {
+  --fc-page-bg-color: #0f1426;
+  --fc-neutral-bg-color: rgba(148, 163, 184, 0.08);
+  --fc-border-color: rgba(148, 163, 184, 0.16);
+  --fc-neutral-text-color: #a8b3cf;
+  --fc-button-text-color: #e5e7eb;
+  --fc-button-bg-color: #1f2937;
+  --fc-button-border-color: rgba(255,255,255,0.1);
+  --fc-button-hover-bg-color: #2b3244;
+  --fc-button-hover-border-color: rgba(255,255,255,0.2);
+  --fc-button-active-bg-color: #374151;
+  --fc-today-bg-color: rgba(79, 70, 229, 0.12);
+  --fc-event-text-color: #e5e7eb;
+}
+
+body.taskraum-dark .fc .fc-col-header-cell-cushion,
+body.taskraum-dark .fc .fc-daygrid-day-number {
+  color: #a8b3cf;
+}
+
+body.taskraum-dark .fc .fc-daygrid-day.fc-day-today {
+  background-color: rgba(79, 70, 229, 0.12);
+}
+
+body.taskraum-dark .fc .fc-event {
+  border: none;
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.07);
+}

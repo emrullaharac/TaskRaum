@@ -5,30 +5,23 @@ import GitHubIcon from "@mui/icons-material/GitHub";
 export default function AppFooter() {
     return (
         <Box
-            component="footer"
-            sx={(theme) => ({
-                minHeight: 56,
-                display: "flex",
-                alignItems: "center",
-                bgcolor: theme.palette.mode === "light" ? "grey.100" : "grey.900",
-                color: theme.palette.mode === "light" ? "text.secondary" : "grey.100",
-                borderTop: "1px solid",
-                borderColor: "divider",
-            })}
+            component="footer" sx={{
+            minHeight: 56, display: "flex", alignItems: "center",
+            borderTop: "1px solid", borderColor: "divider",
+            bgcolor: (t) =>
+                t.palette.mode === "light"
+                    ? "rgba(255,255,255,0.7)"
+                    : "rgba(0,0,0,0.18)",
+            backdropFilter: "blur(6px)",
+        }}
         >
             <Container
                 maxWidth="lg"
                 sx={{
-                    // responsive row column and wrapping
-                    display: "flex",
-                    flexDirection: { xs: "column", sm: "row" },
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    flexWrap: "wrap",
-                    rowGap: 1,
-                    columnGap: 2,
-                    py: 1,
-                    px: 2,
+                    display: "flex", flexDirection: { xs: "column", sm: "row" },
+                    alignItems: "center", justifyContent: "space-between",
+                    flexWrap: "wrap", rowGap: 1, columnGap: 2,
+                    py: { xs: 1.5, sm: 1 }, px: 2,
                 }}
             >
                 <Typography
@@ -41,7 +34,7 @@ export default function AppFooter() {
 
                 <Stack
                     direction="row"
-                    spacing={1.5}
+                    spacing={2}
                     sx={{
                         flexWrap: "wrap",
                         rowGap: 0.5,
@@ -100,6 +93,7 @@ export default function AppFooter() {
                             alignItems: "center",
                             gap: 0.5,
                             whiteSpace: "nowrap",
+                            fontWeight:500
                         }}
                     >
                         <GitHubIcon fontSize="small" />
