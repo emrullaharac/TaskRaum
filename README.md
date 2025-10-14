@@ -15,7 +15,7 @@
 - **Dashboard:** statistics (open tasks, deadlines, completion %).
 - **Settings:** update profile or change password (new ≠ old).
 - **Authentication:** JWT-based login/registration with refresh support.
-
+- 🌙 **Dark / Light Mode:** automatic theme switching with manual toggle
 ---
 
 ## 🛠 Tech Stack
@@ -149,6 +149,14 @@ src/test/java/dev/taskraum/backend
 ---
 
 ## 🖼 Screenshots
+
+## Homepage - Light
+
+![Homepage_Light](./docs/screenshots/Homepage_Light.png)
+
+## Homepage - Dark
+
+![Homepage_Dark](./docs/screenshots/Homepage_Dark.png)
 
 ### Dashboard
 

@@ -10,6 +10,8 @@ import AppFooter from "../../components/Layout/AppFooter";
 type Shot = { src: string; title: string };
 
 const screenshots: Shot[] = [
+    { src: "assets/screenshots/Homepage_Dark.png", title: "Homepage – Dark Mode"},
+    { src: "assets/screenshots/Homepage_Light.png", title: "Homepage – Light Mode"},
     { src: "assets/screenshots/Dashboard.png", title: "Dashboard – KPIs & Upcoming Deadlines" },
     { src: "assets/screenshots/Projects.png", title: "Projects – Active / Paused / Archived" },
     { src: "assets/screenshots/Tasks.png", title: "Tasks – Kanban with Drag & Drop" },
@@ -52,6 +54,8 @@ export default function AboutPage() {
             The bootcamp lasted 3 months, and <strong>this project was developed in 1 month</strong>.
             Tech: Spring Boot backend, React + TypeScript frontend. CRUD operations with a REST API and
             stateless, token-based security using JWT.
+            The app also supports a full dark theme using MUI’s theming. The color mode
+            is stored locally, so your choice persists.
         </Typography>
     );
 
@@ -63,7 +67,8 @@ export default function AboutPage() {
             </Link>.
             Das Bootcamp dauerte 3 Monate; <strong>die Entwicklung dieses Projekts erfolgte in 1 Monat</strong>.
             Technologie: Spring Boot im Backend, React + TypeScript im Frontend. CRUD mit REST-API sowie
-            zustandslose, tokenbasierte Sicherheit per JWT.
+            zustandslose, tokenbasierte Sicherheit per JWT. Die App unterstützt ein vollständiges Dark Theme auf Basis des MUI-Themes.
+            Die Auswahl bleibt lokal gespeichert.
         </Typography>
     );
 
@@ -141,6 +146,10 @@ export default function AboutPage() {
                             </Typography>
                             <Typography>
                                 • <strong>Settings:</strong> Update profile name and change password.
+                            </Typography>
+                            <Typography>
+                                • <strong>Dark Mode:</strong> One-click toggle in TopBar & User Menu; theme persists between visits.
+                                Calendar, cards, and dashboard metrics are tuned for readability in dark & light.
                             </Typography>
                         </Stack>
 
