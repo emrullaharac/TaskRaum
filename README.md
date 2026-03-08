@@ -4,8 +4,6 @@
 - Designed primarily for **single-user usage**, with roadmap toward multi-user support  
 - Developed in **4 weeks** using **Spring Boot (Java)** (backend) and **React + TypeScript** (frontend)
 
-> 🌐 **Live Demo:** [https://taskraum.onrender.com](https://taskraum.onrender.com)
-
 ---
 
 ## ✨ Features
